@@ -1,0 +1,81 @@
+using Test
+
+include("../julia/Engines.jl")
+include("../julia/Permutation.jl")
+include("../julia/Diffusion.jl")
+include("../julia/Substitution.jl")
+include("../julia/RoundCipher.jl")
+include("../julia/FileCipher.jl")
+
+using .Engines
+using .Permutation
+using .Diffusion
+using .Substitution
+using .RoundCipher
+using .FileCipher
+
+const SEED1 = UInt8[
+    0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77,
+    0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff,
+    0x10, 0x20, 0x30, 0x40, 0x50, 0x60, 0x70, 0x80,
+    0x90, 0xa0, 0xb0, 0xc0, 0xd0, 0xe0, 0xf0, 0x01
+]
+
+const SEED2 = UInt8[
+    0xff, 0xee, 0xdd, 0xcc, 0xbb, 0xaa, 0x99, 0x88,
+    0x77, 0x66, 0x55, 0x44, 0x33, 0x22, 0x11, 0x00,
+    0x01, 0xf0, 0xe0, 0xd0, 0xc0, 0xb0, 0xa0, 0x90,
+    0x80, 0x70, 0x60, 0x50, 0x40, 0x30, 0x20, 0x10
+]
+
+const DATA = UInt8[
+    0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
+    0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16,
+    0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26,
+    0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36,
+    0x40, 0x41, 0x42, 0x43, 0x44, 0x45, 0x46,
+    0x50, 0x51, 0x52, 0x53, 0x54, 0x55, 0x56,
+    0x60, 0x61, 0x62, 0x63, 0x64, 0x65, 0x66
+]
+
+@testset "FileCipher roundtrip" begin
+    enc = encrypt_bytes(DATA, SEED1; chunk_size=16, rounds=3)
+    dec = decrypt_bytes(enc, SEED1; chunk_size=16, rounds=3)
+
+    println("plain = ", DATA)
+    println("enc   = ", enc)
+    println("dec   = ", dec)
+
+    @test dec == DATA
+    @test enc != DATA
+end
+
+@testset "FileCipher determinism" begin
+    enc1 = encrypt_bytes(DATA, SEED1; chunk_size=16, rounds=3)
+    enc2 = encrypt_bytes(DATA, SEED1; chunk_size=16, rounds=3)
+
+    @test enc1 == enc2
+end
+
+@testset "FileCipher seed sensitivity" begin
+    enc1 = encrypt_bytes(DATA, SEED1; chunk_size=16, rounds=3)
+    enc2 = encrypt_bytes(DATA, SEED2; chunk_size=16, rounds=3)
+
+    @test enc1 != enc2
+end
+
+@testset "FileCipher uneven final chunk" begin
+    enc = encrypt_bytes(DATA, SEED1; chunk_size=13, rounds=2)
+    dec = decrypt_bytes(enc, SEED1; chunk_size=13, rounds=2)
+
+    @test dec == DATA
+    @test length(enc) == length(DATA)
+end
+
+@testset "FileCipher chunk ranges" begin
+    rs = chunk_ranges(length(DATA), 16)
+    println("ranges = ", rs)
+
+    @test first(rs) == 1:16
+    @test last(rs).stop == length(DATA)
+end

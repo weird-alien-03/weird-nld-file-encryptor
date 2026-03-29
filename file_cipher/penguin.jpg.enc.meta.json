@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "original_name": "penguin.jpg",
+  "original_suffix": ".jpg",
+  "original_size": 16736,
+  "chunk_size": 4096,
+  "rounds": 3,
+  "salt_hex": "00f15a2bf9b1ffdceef7cfeccd425aaa"
+}
