@@ -1,9 +1,0 @@
-{
-  "version": 1,
-  "original_name": "cat.jpg",
-  "original_suffix": ".jpg",
-  "original_size": 107329,
-  "chunk_size": 4096,
-  "rounds": 3,
-  "salt_hex": "9972bf1b0ca7d40100b9ab9c768632cc"
-}
