@@ -325,7 +325,11 @@ https://doi.org/10.1142/S021812742250095X
 X.; Ding, Q. A Three-Dimensional Infinite Collapse Map with Image Encryption. Entropy 2021, 23, 1221.
 
 https://doi.org/10.3390/e23091221
-- **SCC Map (Engine C):** <!-- INSERT FULL CITATION AND DOI HERE -->
+
+- **SCC Map (Engine C):** Zhong, H.; Li, G.; Xu, X.;
+Song, X. Image Encryption Algorithm Based on a Novel Wide-Range Discrete Hyperchaotic Map. Mathematics 2022, 10, 2583. 
+
+https://doi.org/10.3390/math10152583
 
 The key derivation scheme uses PBKDF2-HMAC-SHA256 as specified in [RFC 8018](https://www.rfc-editor.org/rfc/rfc8018).
 
